@@ -59,8 +59,9 @@ public class ErrorHandler {
                 LocalDateTime.now());
     }
 
+
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleException(final Exception e) {
         e.printStackTrace();
         log.info("error: Exception");

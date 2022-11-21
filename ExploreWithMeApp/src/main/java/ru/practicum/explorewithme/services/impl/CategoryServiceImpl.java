@@ -1,8 +1,11 @@
 package ru.practicum.explorewithme.services.impl;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dto.categories.CategoryDto;
 import ru.practicum.explorewithme.dto.categories.NewCategoryDto;
+import ru.practicum.explorewithme.exceptions.ConflictException;
 import ru.practicum.explorewithme.exceptions.ForbiddenException;
 import ru.practicum.explorewithme.exceptions.NotFoundException;
 import ru.practicum.explorewithme.mappers.CategoriesMapper;
@@ -40,17 +43,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(NewCategoryDto categoryDto) {
-        Category category = new Category(null, categoryDto.getName());
-        Category newCategory = categoryRepository.save(category);
-        return CategoriesMapper.toCategoryDto(newCategory);
+        try {
+            Category category = new Category(null, categoryDto.getName());
+            Category newCategory = categoryRepository.save(category);
+            return CategoriesMapper.toCategoryDto(newCategory);
+        } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
+            throw new ConflictException("Add category");
+        }
     }
 
     @Override
     public CategoryDto patchCategory(CategoryDto categoryDto) {
-        Category oldCategory = getCategoryFromDB(categoryDto.getId());
-        oldCategory.setName(categoryDto.getName());
-        Category patchCategory = categoryRepository.save(oldCategory);
-        return CategoriesMapper.toCategoryDto(patchCategory);
+        try {
+            Category oldCategory = getCategoryFromDB(categoryDto.getId());
+            oldCategory.setName(categoryDto.getName());
+            Category patchCategory = categoryRepository.save(oldCategory);
+            return CategoriesMapper.toCategoryDto(patchCategory);
+        } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
+            throw new ConflictException("Add user");
+        }
     }
 
     @Override

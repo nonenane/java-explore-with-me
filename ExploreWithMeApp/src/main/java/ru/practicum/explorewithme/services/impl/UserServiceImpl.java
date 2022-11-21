@@ -1,8 +1,11 @@
 package ru.practicum.explorewithme.services.impl;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dto.user.NewUserRequest;
 import ru.practicum.explorewithme.dto.user.UserDto;
+import ru.practicum.explorewithme.exceptions.ConflictException;
 import ru.practicum.explorewithme.exceptions.NotFoundException;
 import ru.practicum.explorewithme.mappers.UserMapper;
 import ru.practicum.explorewithme.models.User;
@@ -25,9 +28,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(NewUserRequest newUserRequest) {
-        User user = new User(null, newUserRequest.getName(), newUserRequest.getEmail(), new HashSet<>());
-        User newUser = userRepository.save(user);
-        return UserMapper.toUserDto(newUser);
+        try {
+            User user = new User(null, newUserRequest.getName(), newUserRequest.getEmail(), new HashSet<>());
+            User newUser = userRepository.save(user);
+            return UserMapper.toUserDto(newUser);
+        } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
+            throw new ConflictException("Add user");
+        }
     }
 
     @Override
