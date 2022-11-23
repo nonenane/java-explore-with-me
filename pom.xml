@@ -23,9 +23,9 @@
     </properties>
 
     <modules>
-        <module>ExploreWithMeApp</module>
-        <module>StatApp</module>
-        <module>StatClientAndDtoLibrary</module>
+        <module>explorewithmeapp</module>
+        <module>statapp</module>
+        <module>statclientanddtolibrary</module>
     </modules>
 
     <build>
