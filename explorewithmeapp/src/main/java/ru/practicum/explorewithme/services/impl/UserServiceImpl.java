@@ -12,10 +12,11 @@ import ru.practicum.explorewithme.models.User;
 import ru.practicum.explorewithme.services.UserService;
 import ru.practicum.explorewithme.storages.UserRepository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ru.practicum.explorewithme.mappers.UserMapper.toUser;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,8 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(NewUserRequest newUserRequest) {
         try {
-            User user = new User(null, newUserRequest.getName(), newUserRequest.getEmail(), new HashSet<>());
-            User newUser = userRepository.save(user);
+            User newUser = userRepository.save(toUser(newUserRequest));
             return UserMapper.toUserDto(newUser);
         } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
             throw new ConflictException("Add user");

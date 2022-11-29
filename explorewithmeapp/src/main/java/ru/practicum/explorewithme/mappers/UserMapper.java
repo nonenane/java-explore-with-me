@@ -1,8 +1,11 @@
 package ru.practicum.explorewithme.mappers;
 
+import ru.practicum.explorewithme.dto.user.NewUserRequest;
 import ru.practicum.explorewithme.dto.user.UserDto;
 import ru.practicum.explorewithme.dto.user.UserShortDto;
 import ru.practicum.explorewithme.models.User;
+
+import java.util.HashSet;
 
 public class UserMapper {
 
@@ -27,5 +30,13 @@ public class UserMapper {
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();
+    }
+
+    public static User toUser(NewUserRequest newUserRequest) {
+        if (newUserRequest == null) {
+            return null;
+        }
+
+        return new User(null, newUserRequest.getName(), newUserRequest.getEmail(), new HashSet<>());
     }
 }
