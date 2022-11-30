@@ -132,70 +132,87 @@ public class EventServiceImpl implements EventService {
             event.setState(EventState.PENDING);
         }
 
-
-        if (updateEventRequest.getTitle() != null) {
-            event.setTitle(updateEventRequest.getTitle());
-        }
-        if (updateEventRequest.getAnnotation() != null) {
-            event.setAnnotation(updateEventRequest.getAnnotation());
-        }
-        if (updateEventRequest.getDescription() != null) {
-            event.setDescription(updateEventRequest.getDescription());
-        }
-        if (updateEventRequest.getCategory() != null) {
-            event.setCategory(getCategoryFromDB(updateEventRequest.getCategory()));
-        }
-        if (updateEventRequest.getEventDate() != null) {
-            event.setEventDate(updateEventRequest.getEventDate());
-        }
-        if (updateEventRequest.getPaid() != null) {
-            event.setPaid(updateEventRequest.getPaid());
-        }
-        if (updateEventRequest.getParticipantLimit() != null) {
-            event.setParticipantLimit(updateEventRequest.getParticipantLimit());
-        }
+        addTitle(event, updateEventRequest.getTitle());
+        addAnnotation(event, updateEventRequest.getAnnotation());
+        addDescription(event, updateEventRequest.getDescription());
+        addEventDate(event, updateEventRequest.getEventDate());
+        addCategory(event, updateEventRequest.getCategory());
+        addPaid(event, updateEventRequest.getPaid());
+        addParticipantLimit(event, updateEventRequest.getParticipantLimit());
 
         Event newEvent = eventRepository.save(event);
 
         return EventMapper.toEventFullDto(newEvent);
     }
 
+    private void addTitle(Event event, String title) {
+        if (title != null) {
+            event.setTitle(title);
+        }
+    }
+
+    private void addAnnotation(Event event, String annotation) {
+        if (annotation != null) {
+            event.setAnnotation(annotation);
+        }
+    }
+
+    private void addDescription(Event event, String description) {
+        if (description != null) {
+            event.setDescription(description);
+        }
+    }
+
+    private void addEventDate(Event event, LocalDateTime eventDate) {
+        if (eventDate != null) {
+            event.setEventDate(eventDate);
+        }
+    }
+
+    private void addCategory(Event event, Long category) {
+        if (category != null) {
+            event.setCategory(getCategoryFromDB(category));
+        }
+    }
+
+    private void addPaid(Event event, Boolean paid) {
+        if (paid != null) {
+            event.setPaid(paid);
+        }
+    }
+
+    private void addParticipantLimit(Event event, Integer participantLimit) {
+        if (participantLimit != null) {
+            event.setParticipantLimit(participantLimit);
+        }
+    }
+
     @Override
-    public EventFullDto adminUpdateEvent(AdminUpdateEventRequest updateEventRequest, Long eventId) {
+    public EventFullDto adminUpdateEvent(AdminUpdateEventRequest adminUpdateEventRequest, Long eventId) {
         Event event = getEventFromDB(eventId);
 
-        if (updateEventRequest.getTitle() != null) {
-            event.setTitle(updateEventRequest.getTitle());
+
+        addTitle(event, adminUpdateEventRequest.getTitle());
+        addAnnotation(event, adminUpdateEventRequest.getAnnotation());
+        addDescription(event, adminUpdateEventRequest.getDescription());
+        addEventDate(event, adminUpdateEventRequest.getEventDate());
+        addCategory(event, adminUpdateEventRequest.getCategory());
+        addPaid(event, adminUpdateEventRequest.getPaid());
+        addParticipantLimit(event, adminUpdateEventRequest.getParticipantLimit());
+
+        if (adminUpdateEventRequest.getLocation() != null) {
+            event.setLat(adminUpdateEventRequest.getLocation().getLat());
+            event.setLon(adminUpdateEventRequest.getLocation().getLon());
         }
-        if (updateEventRequest.getAnnotation() != null) {
-            event.setAnnotation(updateEventRequest.getAnnotation());
-        }
-        if (updateEventRequest.getDescription() != null) {
-            event.setDescription(updateEventRequest.getDescription());
-        }
-        if (updateEventRequest.getEventDate() != null) {
-            event.setEventDate(updateEventRequest.getEventDate());
-        }
-        if (updateEventRequest.getCategory() != null) {
-            event.setCategory(getCategoryFromDB(updateEventRequest.getCategory()));
-        }
-        if (updateEventRequest.getLocation() != null) {
-            event.setLat(updateEventRequest.getLocation().getLat());
-            event.setLon(updateEventRequest.getLocation().getLon());
-        }
-        if (updateEventRequest.getPaid() != null) {
-            event.setPaid(updateEventRequest.getPaid());
-        }
-        if (updateEventRequest.getParticipantLimit() != null) {
-            event.setParticipantLimit(updateEventRequest.getParticipantLimit());
-        }
-        if (updateEventRequest.getRequestModeration() != null) {
-            event.setRequestModeration(updateEventRequest.getRequestModeration());
+
+        if (adminUpdateEventRequest.getRequestModeration() != null) {
+            event.setRequestModeration(adminUpdateEventRequest.getRequestModeration());
         }
 
         Event updateEvent = eventRepository.save(event);
         return EventMapper.toEventFullDto(updateEvent);
     }
+
 
     @Override
     public EventFullDto cancelEvent(Long userId, Long eventId) {

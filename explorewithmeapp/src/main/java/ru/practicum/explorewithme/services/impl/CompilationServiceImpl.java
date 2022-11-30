@@ -44,7 +44,8 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto get(Long compId) {
-        Compilation compilation = getCompilationFromDB(compId);
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
         return CompilationMapper.toCompilationDto(compilation);
     }
 
@@ -55,7 +56,8 @@ public class CompilationServiceImpl implements CompilationService {
                 newCompilationDto.getTitle(),
                 newCompilationDto.getEvents()
                         .stream()
-                        .map(this::getEventFromDB)
+                        .map(eventId -> eventRepository.findById(eventId)
+                                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found.")))
                         .collect(Collectors.toSet()));
         Compilation newCompilation = compilationRepository.save(compilation);
         return CompilationMapper.toCompilationDto(newCompilation);
@@ -63,29 +65,30 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void delete(Long compId) {
-        getCompilationFromDB(compId);
+        compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
         compilationRepository.deleteById(compId);
     }
 
     @Override
     @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
-        Compilation compilation = getCompilationFromDB(compId);
-        Event event = getEventFromDB(eventId);
-        if (compilation.getEvents().contains(event)) {
-            compilationRepository.deleteEventFromCompilation(compId, eventId);
-        } else {
-            throw new NotFoundException("Compilation does not contain this event");
-        }
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
+        compilation.getEvents().removeIf(event -> event.getId().equals(eventId));
+        compilationRepository.save(compilation);
     }
 
     @Override
     @Transactional
     public void addEventToCompilation(Long compId, Long eventId) {
-        Compilation compilation = getCompilationFromDB(compId);
-        Event event = getEventFromDB(eventId);
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found."));
         if (!compilation.getEvents().contains(event)) {
-            compilationRepository.addEventToCompilation(compId, eventId);
+            compilation.getEvents().add(event);
+            compilationRepository.save(compilation);
         } else {
             throw new ConflictException("Compilation already contain this event");
         }
@@ -93,7 +96,8 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void unpinCompilation(Long compId) {
-        Compilation compilation = getCompilationFromDB(compId);
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
         if (!compilation.getPinned())
             throw new ForbiddenException("Compilation is not pinned");
         compilation.setPinned(false);
@@ -102,20 +106,12 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void pinCompilation(Long compId) {
-        Compilation compilation = getCompilationFromDB(compId);
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
         if (compilation.getPinned())
             throw new ForbiddenException("Compilation is already pinned");
         compilation.setPinned(true);
         compilationRepository.save(compilation);
     }
 
-    private Compilation getCompilationFromDB(Long compId) {
-        return compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found."));
-    }
-
-    private Event getEventFromDB(Long eventId) {
-        return eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found."));
-    }
 }

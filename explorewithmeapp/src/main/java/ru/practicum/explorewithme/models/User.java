@@ -19,8 +19,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+    @Column(name = "name", length = 256, nullable = false)
     private String name;
-    @Column(unique = true, length = 512)
+    @Column(unique = true, length = 512, nullable = false)
     private String email;
 
     //id пользователей, на которых подписан данный пользователь

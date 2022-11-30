@@ -20,12 +20,13 @@ public class EndpointHit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hit_id")
     Long id;
-    @Column(length = 200)
+    @Column(length = 200, nullable = false)
     String app;
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     String uri;
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     String ip;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "timestamp", nullable = false)
     LocalDateTime timestamp;
 }

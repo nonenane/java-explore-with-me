@@ -19,7 +19,9 @@ public class Compilation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
     private Long id;
+    @Column(name = "pinned", nullable = false)
     private Boolean pinned;
+    @Column(name = "title", nullable = false, length = 256)
     private String title;
 
     @ManyToMany
