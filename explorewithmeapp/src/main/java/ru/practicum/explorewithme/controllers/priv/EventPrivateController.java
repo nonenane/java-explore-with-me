@@ -43,7 +43,7 @@ public class EventPrivateController {
                                     @PathVariable Long userId) {
         authenticationService.throwIfUserNotFound(userId);
         EventFullDto eventFullDto = eventService.create(newEventDto, userId);
-        log.info("Выполнен запрос createEvent");
+        log.info("Выполнен запрос Создание события {}", newEventDto);
         return eventFullDto;
     }
 
@@ -55,7 +55,7 @@ public class EventPrivateController {
                                    @PathVariable Long userId) {
         authenticationService.throwIfUserNotFound(userId);
         EventFullDto updateEvent = eventService.patch(updateEventRequest);
-        log.info("Выполнен запрос patchEvent");
+        log.info("Выполнен запрос Обновления события по ID {}, {}", userId, updateEventRequest);
         return updateEvent;
     }
 
@@ -66,7 +66,7 @@ public class EventPrivateController {
     public EventFullDto cancelEvent(@PathVariable Long userId, @PathVariable Long eventId) {
         authenticationService.throwIfUserNotFound(userId);
         EventFullDto updateEvent = eventService.cancelEvent(userId, eventId);
-        log.info("Выполнен запрос patchEvent");
+        log.info("Выполнен запрос Отмены события ID {} пользователем ID {}", eventId, userId);
         return updateEvent;
     }
 
@@ -79,7 +79,7 @@ public class EventPrivateController {
                                            @RequestParam(required = false, defaultValue = "10") @Positive Integer size) {
         authenticationService.throwIfUserNotFound(userId);
         List<EventShortDto> dtoList = eventService.getMyEvents(userId, from, size);
-        log.info("Выполнен запрос getEvents");
+        log.info("Выполнен запрос Получение событий, добавленных текущим пользователем ID {}", userId);
         return dtoList;
     }
 
@@ -90,7 +90,8 @@ public class EventPrivateController {
     public EventFullDto getMyEvent(@PathVariable Long userId, @PathVariable Long eventId) {
         authenticationService.throwIfUserNotFound(userId);
         EventFullDto event = eventService.getMyEvent(userId, eventId);
-        log.info("Выполнен запрос getMyEvent");
+        log.info("Выполнен запрос Получение полной информации о событии ID {}, добавленном текущм пользователем ID {}",
+                eventId, userId);
         return event;
     }
 
@@ -98,10 +99,12 @@ public class EventPrivateController {
      * Получение информации о запросах на участие в событии, добавленном текущм пользователем
      */
     @GetMapping("/events/{eventId}/requests")
-    public List<ParticipationRequestDto> getMyEventParticipantRequests(@PathVariable Long userId, @PathVariable Long eventId) {
+    public List<ParticipationRequestDto> getMyEventParticipantRequests(@PathVariable Long userId,
+                                                                       @PathVariable Long eventId) {
         authenticationService.throwIfUserNotFound(userId);
         List<ParticipationRequestDto> requestDtoList = requestService.getMyEventParticipantRequests(userId, eventId);
-        log.info("Выполнен запрос getMyEventParticipantRequests");
+        log.info("Выполнен запрос Получение информации о запросах на участие в событии ID {}, " +
+                "добавленном текущм пользователем ID", eventId, userId);
         return requestDtoList;
     }
 
@@ -117,7 +120,8 @@ public class EventPrivateController {
                 eventId,
                 reqId,
                 true);
-        log.info("Выполнен запрос confirmParticipantRequest");
+        log.info("Выполнен запрос Подтверждение чужой заявки ID {} на участие в событии ID {}" +
+                "текущего пользователя ID {}", reqId, eventId, userId);
         return requestDto;
     }
 
@@ -133,7 +137,8 @@ public class EventPrivateController {
                 eventId,
                 reqId,
                 false);
-        log.info("Выполнен запрос rejectParticipantRequest");
+        log.info("Выполнен запрос Отклонение чужой заявки ID {} на участие в событии ID {}" +
+                "текущего пользователя ID {}", reqId, eventId, userId);
         return requestDto;
     }
 }

@@ -7,7 +7,6 @@ import ru.practicum.explorewithme.dto.user.NewUserRequest;
 import ru.practicum.explorewithme.dto.user.UserDto;
 import ru.practicum.explorewithme.services.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -30,7 +29,7 @@ public class UserAdminController {
     public UserDto createUser(@Valid @RequestBody NewUserRequest newUserRequest) {
 
         UserDto userDto = userService.create(newUserRequest);
-        log.info("Выполнен запрос createUser");
+        log.info("Выполнен запрос Создания пользователя {}", newUserRequest);
         return userDto;
     }
 
@@ -40,15 +39,15 @@ public class UserAdminController {
                                   @RequestParam(required = false, defaultValue = "10") @Positive Integer size) {
 
         List<UserDto> dtoList = userService.get(ids, from, size);
-        log.info("Выполнен запрос getUsers");
+        log.info("Выполнен запрос Получения пользователей c параметрами IDs {},From {}, Size {}",
+                ids, from, size);
         return dtoList;
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId,
-                           HttpServletRequest request) {
+    public void deleteUser(@PathVariable Long userId) {
 
         userService.delete(userId);
-        log.info("Выполнен запрос deleteUser");
+        log.info("Выполнен запрос Удаления пользователя ID {}", userId);
     }
 }

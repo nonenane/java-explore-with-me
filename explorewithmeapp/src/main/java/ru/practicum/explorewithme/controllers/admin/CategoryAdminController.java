@@ -25,7 +25,7 @@ public class CategoryAdminController {
     public CategoryDto createCategory(@Valid @RequestBody NewCategoryDto categoryDto) {
 
         CategoryDto newCategoryDto = categoryService.create(categoryDto);
-        log.info("Выполнен запрос createCategory {}", categoryDto);
+        log.info("Выполнен запрос Добавление категории {}", categoryDto);
         return newCategoryDto;
     }
 
@@ -33,7 +33,7 @@ public class CategoryAdminController {
     public CategoryDto patchCategory(@Valid @RequestBody CategoryDto categoryDto) {
 
         CategoryDto newCategoryDto = categoryService.patch(categoryDto);
-        log.info("Выполнен запрос patchCategory: {}", categoryDto);
+        log.info("Выполнен запрос Обновление категории: {}", categoryDto);
         return newCategoryDto;
     }
 
@@ -41,6 +41,6 @@ public class CategoryAdminController {
     public void deleteCategory(@PathVariable Long catId) {
 
         categoryService.delete(catId);
-        log.info("Выполнен запрос deleteCategory ID:{}", catId);
+        log.info("Выполнен запрос Удаление категории ID:{}", catId);
     }
 }

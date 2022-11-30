@@ -34,7 +34,7 @@ public class CategoryPublicController {
                                            @Positive Integer size) {
 
         List<CategoryDto> dtoList = categoryService.getAll(from, size);
-        log.info("Выполнен запрос getCategories");
+        log.info("Выполнен запрос Получение категорий");
         return dtoList;
     }
 
@@ -45,7 +45,7 @@ public class CategoryPublicController {
     public CategoryDto getCategory(@PathVariable Long catId) {
 
         CategoryDto categoryDto = categoryService.get(catId);
-        log.info("Выполнен запрос getCategory");
+        log.info("Выполнен запрос Получение информации по категории ID {}", catId);
         return categoryDto;
     }
 }

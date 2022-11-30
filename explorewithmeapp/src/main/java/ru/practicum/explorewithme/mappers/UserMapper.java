@@ -36,7 +36,10 @@ public class UserMapper {
         if (newUserRequest == null) {
             return null;
         }
-
-        return new User(null, newUserRequest.getName(), newUserRequest.getEmail(), new HashSet<>());
+        return User.builder()
+                .name(newUserRequest.getName())
+                .email(newUserRequest.getEmail())
+                .subscriptions(new HashSet<>())
+                .build();
     }
 }

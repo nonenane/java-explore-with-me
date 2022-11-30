@@ -28,7 +28,8 @@ public class StatsController {
     @PostMapping("/hit")
     public void createEndpointHit(@RequestBody EndpointHit endpointHit) {
         endpointHitService.createEndpointHit(endpointHit);
-        log.info("Выполнен запрос createEndpointHit");
+        log.info("Выполнен запрос Сохранение информации о том, что к эндпоинту был запрос {}",
+                endpointHit);
     }
 
     /**
@@ -41,7 +42,8 @@ public class StatsController {
                                     @RequestParam(required = false, defaultValue = "false") Boolean unique) {
 
         List<ViewStats> statsList = endpointHitService.getStats(start, end, uris, unique);
-        log.info("Выполнен запрос getStats");
+        log.info("Выполнен запрос Получение статистики по посещениям за период с {} по {}, uris {}",
+                start, end, uris);
         return statsList;
     }
 }

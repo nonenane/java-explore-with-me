@@ -58,7 +58,7 @@ public class EventPublicController {
                 .size(size)
                 .build();
         List<EventShortDto> dtoList = eventService.getAll(paramModel, request);
-        log.info("Выполнен запрос getEvents");
+        log.info("Выполнен запрос Получение событий с возможностью фильтрации");
         return dtoList;
     }
 
@@ -69,7 +69,7 @@ public class EventPublicController {
     public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
         EventFullDto foundEvent = eventService.get(id, request);
 
-        log.info("Выполнен запрос getEvent");
+        log.info("Выполнен запрос Получение подробной информации об опубликованном событии ID {}", id);
         return foundEvent;
     }
 }

@@ -31,7 +31,8 @@ public class ParticipationRequestPrivateController {
     public List<ParticipationRequestDto> getMyRequests(@PathVariable Long userId) {
         authenticationService.throwIfUserNotFound(userId);
         List<ParticipationRequestDto> requestDtoList = requestService.getMyRequests(userId);
-        log.info("Выполнен запрос getMyRequests");
+        log.info("Выполнен запрос Получение информации о заявках данного пользователя ID {} на участие " +
+                "в чужих событиях", userId);
         return requestDtoList;
     }
 
@@ -42,7 +43,8 @@ public class ParticipationRequestPrivateController {
     public ParticipationRequestDto createRequest(@PathVariable Long userId, @RequestParam Long eventId) {
         authenticationService.throwIfUserNotFound(userId);
         ParticipationRequestDto savedRequest = requestService.createRequest(userId, eventId);
-        log.info("Выполнен запрос getMyEventParticipantRequests");
+        log.info("Выполнен запрос Добавление запроса на участие в событии ID {} пользователем ID {}",
+                eventId, userId);
         return savedRequest;
     }
 
@@ -53,7 +55,8 @@ public class ParticipationRequestPrivateController {
     public ParticipationRequestDto cancelRequest(@PathVariable Long userId, @PathVariable Long requestId) {
         authenticationService.throwIfUserNotFound(userId);
         ParticipationRequestDto requestDto = requestService.cancelRequest(userId, requestId);
-        log.info("Выполнен запрос getMyEventParticipantRequests");
+        log.info("Выполнен запрос Отмена своего запроса на участие в событие ID {} пользователь ID {}",
+                requestId, userId);
         return requestDto;
     }
 }

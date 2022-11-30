@@ -34,7 +34,8 @@ public class SubscriptionPrivateController {
     public void createSubscription(@PathVariable Long userId, @PathVariable Long subsId) {
         authenticationService.throwIfUserNotFound(userId);
         subscriptionService.create(userId, subsId);
-        log.info("Выполнен запрос createSubscription");
+        log.info("Выполнен запрос Подписаться на пользователя ID {} пользователем ID {}",
+                subsId, userId);
     }
 
     /**
@@ -44,7 +45,8 @@ public class SubscriptionPrivateController {
     public void deleteSubscription(@PathVariable Long userId, @PathVariable Long subsId) {
         authenticationService.throwIfUserNotFound(userId);
         subscriptionService.delete(userId, subsId);
-        log.info("Выполнен запрос deleteSubscription");
+        log.info("Выполнен запрос Отменить подписку на пользователя ID {} пользователем ID {}",
+                subsId, userId);
     }
 
 
@@ -60,7 +62,8 @@ public class SubscriptionPrivateController {
                                                      @Positive Integer size) {
         authenticationService.throwIfUserNotFound(userId);
         List<EventShortDto> event = subscriptionService.get(userId, sort, from, size);
-        log.info("Выполнен запрос deleteSubscription");
+        log.info("Выполнен запрос Посмотреться грядущие события пользователей, на которых подписан ID {}",
+                userId);
         return event;
     }
 }

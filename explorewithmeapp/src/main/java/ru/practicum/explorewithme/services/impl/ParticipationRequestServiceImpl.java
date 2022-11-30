@@ -46,7 +46,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public List<ParticipationRequestDto> getMyEventParticipantRequests(Long userId, Long eventId) {
         Event event = getEventFromDB(eventId);
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new ForbiddenException("User is not initiator of event");
+            throw new ForbiddenException(String.format("User ID %s is not initiator of event ID %s", userId, eventId));
         }
 
         if (!event.getRequestModeration()) {
@@ -66,20 +66,20 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public ParticipationRequestDto moderateParticipantRequest(Long userId, Long eventId, Long reqId, Boolean confirm) {
         Event event = getEventFromDB(eventId);
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new ForbiddenException("User is not initiator of event");
+            throw new ForbiddenException(String.format("User ID %s is not initiator of event ID %s", userId, eventId));
         }
 
         ParticipationRequest request = getRequestFromDB(reqId);
         if (!Objects.equals(request.getEvent().getId(), eventId)) {
-            throw new ForbiddenException("This is a request for another event");
+            throw new ForbiddenException("This is a request " + request + " for another event");
         }
 
         if (!event.getRequestModeration()) {
-            throw new ForbiddenException("Requests for this event do not require moderation");
+            throw new ForbiddenException("Requests " + request + " for this event do not require moderation");
         }
 
         if (request.getStatus() != ParticipationStatus.PENDING) {
-            throw new ForbiddenException("Request status is not PENDING");
+            throw new ForbiddenException("Request " + request + " status is not PENDING");
         }
 
         //если заявку нужно отклонить
@@ -91,7 +91,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         if (event.getParticipantLimit() != 0
                 && event.getParticipantLimit() - event.getConfirmedRequests() == 0) {
-            throw new ForbiddenException("Requests limit reached");
+            throw new ForbiddenException("Requests " + request + " limit reached");
         }
 
         request.setStatus(ParticipationStatus.CONFIRMED);
@@ -120,18 +120,18 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public ParticipationRequestDto createRequest(Long userId, Long eventId) {
 
         if (requestRepository.findByEvent_IdAndRequester_Id(eventId, userId).isPresent())
-            throw new ForbiddenException("Repeated request");
+            throw new ForbiddenException("Repeated request To Event ID " + eventId + " User ID " + userId);
 
         Event event = getEventFromDB(eventId);
         if (Objects.equals(event.getInitiator().getId(), eventId)) {
-            throw new BadRequestException("User is initiator of event");
+            throw new BadRequestException("User ID " + userId + " is initiator of event ID" + eventId);
         }
         if (event.getState() != EventState.PUBLISHED) {
-            throw new ForbiddenException("Event is not PUBLISHED");
+            throw new ForbiddenException("Event ID " + eventId + "is not PUBLISHED");
         }
         if (event.getParticipantLimit() != 0
                 && event.getParticipantLimit() - event.getConfirmedRequests() == 0) {
-            throw new ForbiddenException("Requests limit reached");
+            throw new ForbiddenException("Requests Event ID " + eventId + "limit reached");
         }
 
         User user = getUserFromDB(userId);
@@ -149,7 +149,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
         ParticipationRequest request = getRequestFromDB(requestId);
         if (!Objects.equals(request.getRequester().getId(), userId)) {
-            throw new ForbiddenException("userId and requesterId are different");
+            throw new ForbiddenException("userId " + userId + " and requesterId " + requestId + " are different");
         }
 
         switch (request.getStatus()) {

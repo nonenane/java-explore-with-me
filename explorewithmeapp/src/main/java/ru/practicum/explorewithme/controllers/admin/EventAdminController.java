@@ -48,7 +48,8 @@ public class EventAdminController {
                 .size(size)
                 .build();
         List<EventFullDto> dtoList = eventService.getEventsAdmin(paramModel);
-        log.info("Выполнен запрос getEventsAdmin");
+        log.info("Выполнен запрос Поиска события с параметрами Users {}, States {}, Categories {}, RangeStart {},RangeEnd {}," +
+                "From {},Size {}", users, states, categories, rangeStart, rangeEnd, from, size);
         return dtoList;
     }
 
@@ -56,11 +57,11 @@ public class EventAdminController {
      * Редактирование событий
      */
     @PutMapping("/{eventId}")
-    public EventFullDto updateEventAdmin(@RequestBody AdminUpdateEventRequest updateEventRequest,
+    public EventFullDto updateEventAdmin(@RequestBody AdminUpdateEventRequest adminUpdateEventRequest,
                                          @PathVariable Long eventId) {
 
-        EventFullDto updateEvent = eventService.adminUpdateEvent(updateEventRequest, eventId);
-        log.info("Выполнен запрос updateEventAdmin");
+        EventFullDto updateEvent = eventService.adminUpdateEvent(adminUpdateEventRequest, eventId);
+        log.info("Выполнен запрос Обновления события {}", adminUpdateEventRequest);
         return updateEvent;
     }
 
@@ -70,7 +71,7 @@ public class EventAdminController {
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable Long eventId) {
         EventFullDto event = eventService.publishEvent(eventId);
-        log.info("Выполнен запрос publishEvent");
+        log.info("Выполнен запрос Публикации события ID {}", eventId);
         return event;
     }
 
@@ -80,7 +81,7 @@ public class EventAdminController {
     @PatchMapping("/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable Long eventId) {
         EventFullDto event = eventService.rejectEvent(eventId);
-        log.info("Выполнен запрос rejectEvent");
+        log.info("Выполнен запрос Отклонения события ID {}", eventId);
         return event;
     }
 

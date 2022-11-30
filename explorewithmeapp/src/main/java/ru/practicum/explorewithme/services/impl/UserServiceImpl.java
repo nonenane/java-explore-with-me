@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
             User newUser = userRepository.save(toUser(newUserRequest));
             return UserMapper.toUserDto(newUser);
         } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
-            throw new ConflictException("Add user");
+            throw new ConflictException("Add User " + newUserRequest);
         }
     }
 
@@ -51,12 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long userId) {
-        getUserFromDB(userId);
-        userRepository.deleteById(userId);
-    }
-
-    private User getUserFromDB(Long userId) {
-        return userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found."));
+        userRepository.deleteById(userId);
     }
 }

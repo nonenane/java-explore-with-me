@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category newCategory = categoryRepository.save(category);
             return toCategoryDto(newCategory);
         } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
-            throw new ConflictException("Add category");
+            throw new ConflictException(String.format("Ошибка добавления категории %s", categoryDto));
         }
     }
 
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category patchCategory = categoryRepository.save(oldCategory);
             return toCategoryDto(patchCategory);
         } catch (ConstraintViolationException | DataIntegrityViolationException exp) {
-            throw new ConflictException("Add user");
+            throw new ConflictException(String.format("Ошибка обновления категории %s", categoryDto));
         }
     }
 

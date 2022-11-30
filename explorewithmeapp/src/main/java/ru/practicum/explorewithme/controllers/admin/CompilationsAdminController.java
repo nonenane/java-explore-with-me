@@ -28,7 +28,7 @@ public class CompilationsAdminController {
     public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
 
         CompilationDto compilationDto = compilationService.create(newCompilationDto);
-        log.info("Выполнен запрос createCompilation");
+        log.info("Выполнен запрос Подборки события {}", newCompilationDto);
         return compilationDto;
     }
 
@@ -39,7 +39,7 @@ public class CompilationsAdminController {
     public void deleteCompilation(@PathVariable Long compId) {
 
         compilationService.delete(compId);
-        log.info("Выполнен запрос deleteCompilation");
+        log.info("Выполнен запрос Удаления подборки события по ID:{}", compId);
     }
 
     /**
@@ -50,7 +50,7 @@ public class CompilationsAdminController {
                                            @PathVariable Long eventId) {
 
         compilationService.deleteEventFromCompilation(compId, eventId);
-        log.info("Выполнен запрос deleteEventFromCompilation");
+        log.info("Выполнен запрос Удаление события ID {} из подборки ID {}", eventId, compId);
     }
 
     /**
@@ -61,21 +61,21 @@ public class CompilationsAdminController {
                                       @PathVariable Long eventId) {
 
         compilationService.addEventToCompilation(compId, eventId);
-        log.info("Выполнен запрос addEventFromCompilation");
+        log.info("Выполнен запрос Добавления события ID {} в подборку ID {}", eventId, compId);
     }
 
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable Long compId) {
 
         compilationService.unpinCompilation(compId);
-        log.info("Выполнен запрос deleteCompilation");
+        log.info("Выполнен запрос удаления подписки на событие ID {}", compId);
     }
 
     @PatchMapping("/{compId}/pin")
     public void pinCompilation(@PathVariable Long compId) {
 
         compilationService.pinCompilation(compId);
-        log.info("Выполнен запрос deleteCompilation");
+        log.info("Выполнен запрос подписки на событие ID {}", compId);
     }
 
 

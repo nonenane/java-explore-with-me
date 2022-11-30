@@ -35,7 +35,7 @@ public class CompilationPublicController {
                                                 @Positive Integer size) {
 
         List<CompilationDto> compilationsDto = compilationService.getAll(pinned, from, size);
-        log.info("Выполнен запрос getCompilations");
+        log.info("Выполнен запрос Получение подборок событий");
         return compilationsDto;
     }
 
@@ -46,7 +46,7 @@ public class CompilationPublicController {
     public CompilationDto getCompilation(@PathVariable Long compId) {
 
         CompilationDto compilationDto = compilationService.get(compId);
-        log.info("Выполнен запрос getCompilation");
+        log.info("Выполнен запрос Получение подборки событий по ID {}", compId);
         return compilationDto;
     }
 }

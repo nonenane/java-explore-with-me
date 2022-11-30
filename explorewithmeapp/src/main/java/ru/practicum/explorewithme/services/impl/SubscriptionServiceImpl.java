@@ -33,7 +33,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void create(Long userId, Long subsId) {
         getUserFromDB(subsId);
         if (userRepository.checkSubscription(userId, subsId) == 1) {
-            throw new ConflictException("Subscription already exist");
+            throw new ConflictException("Subscription User ID: " + subsId + " already exist User ID:" + userId);
         }
         userRepository.createSubscription(userId, subsId);
     }
@@ -43,7 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void delete(Long userId, Long subsId) {
         getUserFromDB(subsId);
         if (userRepository.checkSubscription(userId, subsId) == 0) {
-            throw new ConflictException("Subscription does not exist");
+            throw new ConflictException("Subscription User ID: " + subsId + " does not exist User ID:" + userId);
         }
         userRepository.deleteSubscription(userId, subsId);
     }

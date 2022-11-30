@@ -219,10 +219,11 @@ public class EventServiceImpl implements EventService {
         Event event = getEventFromDB(eventId);
 
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new ForbiddenException("User is not initiator of event");
+            throw new ForbiddenException(String.format("User ID %s is not initiator of event ID %s"
+                    , userId, eventId));
         }
         if (event.getState() != EventState.PENDING) {
-            throw new ForbiddenException("Event is not PENDING");
+            throw new ForbiddenException(String.format("Event ID %s is not PENDING", eventId));
         }
 
         event.setState(EventState.CANCELED);
@@ -234,10 +235,10 @@ public class EventServiceImpl implements EventService {
     public EventFullDto publishEvent(Long eventId) {
         Event event = getEventFromDB(eventId);
         if (event.getState() != EventState.PENDING) {
-            throw new ForbiddenException("Event is not PENDING");
+            throw new ForbiddenException(String.format("Event ID %s is not PENDING", eventId));
         }
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new ForbiddenException("Less 1 hour before event.");
+            throw new ForbiddenException(String.format("Less 1 hour before event ID %s.", event));
         }
         event.setState(EventState.PUBLISHED);
         Event publishEvent = eventRepository.save(event);
@@ -248,7 +249,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto rejectEvent(Long eventId) {
         Event event = getEventFromDB(eventId);
         if (event.getState() == EventState.PUBLISHED) {
-            throw new ForbiddenException("Event is PUBLISHED");
+            throw new ForbiddenException(String.format("Event ID %s is PUBLISHED", eventId));
         }
         event.setState(EventState.CANCELED);
         Event rejectEvent = eventRepository.save(event);
