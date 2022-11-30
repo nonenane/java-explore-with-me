@@ -219,8 +219,8 @@ public class EventServiceImpl implements EventService {
         Event event = getEventFromDB(eventId);
 
         if (!Objects.equals(event.getInitiator().getId(), userId)) {
-            throw new ForbiddenException(String.format("User ID %s is not initiator of event ID %s"
-                    , userId, eventId));
+            throw new ForbiddenException(String.format("User ID %s is not initiator of event ID %s",
+                    userId, eventId));
         }
         if (event.getState() != EventState.PENDING) {
             throw new ForbiddenException(String.format("Event ID %s is not PENDING", eventId));
