@@ -23,6 +23,11 @@ spring:
     password: '${POSTGRES_PASSWORD}'
 stat-server:
   url: '${STAT_SERVER_URL}'
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
 ---
 spring:
   config:
@@ -35,4 +40,9 @@ spring:
     password: test
 stat-server:
   url: 'http://localhost:9090'
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE
 
